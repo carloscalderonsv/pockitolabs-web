@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join my group on SplitSmart</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Join my group on SplitSmart">
+  <meta property="og:description" content="Split bills smarter with AI. No ads. No limits.">
+  <meta property="og:url" content="https://splitsmart.pockitolabs.com/invite">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0F0A1E;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+      gap: 20px;
+    }
+
+    .container.visible {
+      display: flex;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: 900;
+      color: #fff;
+      box-shadow: 0 4px 24px rgba(245, 158, 11, 0.4);
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.35;
+      color: #fff;
+    }
+
+    .subtext {
+      font-size: 15px;
+      color: #9CA3AF;
+      line-height: 1.5;
+    }
+
+    .btn-open {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      background: #6366F1;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 600;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .btn-open:hover {
+      background: #4F46E5;
+    }
+
+    .store-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .store-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 13px 20px;
+      border: 1.5px solid #374151;
+      border-radius: 12px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .store-btn:hover {
+      border-color: #6366F1;
+      background: rgba(99, 102, 241, 0.08);
+    }
+
+    .store-btn svg {
+      flex-shrink: 0;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: #4B5563;
+      margin-top: 8px;
+    }
+
+    .error {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .error.visible {
+      display: flex;
+    }
+
+    .error h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #F87171;
+    }
+
+    .error p {
+      font-size: 14px;
+      color: #9CA3AF;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="landing">
+    <div class="logo">$</div>
+    <h1>You've been invited to a group on SplitSmart</h1>
+    <p class="subtext">Split bills smarter with AI. No ads. No limits.</p>
+
+    <a class="btn-open" id="openBtn" href="#">Open in App</a>
+
+    <div class="store-buttons" id="storeButtons"></div>
+
+    <p class="footer">Powered by Pockito Labs</p>
+  </div>
+
+  <div class="error" id="errorState">
+    <h2>Invalid invite link</h2>
+    <p>This invite link is missing a code. Please ask for a new invite.</p>
+    <p class="footer">Powered by Pockito Labs</p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if (!code) {
+      document.getElementById('errorState').classList.add('visible');
+    } else {
+      const deepLink = 'splitsmart://invite?code=' + encodeURIComponent(code);
+
+      // Immediately try to open the deep link
+      window.location.href = deepLink;
+
+      // Wire up the "Open in App" button
+      const openBtn = document.getElementById('openBtn');
+      openBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        window.location.href = deepLink;
+      });
+
+      // Detect platform and render store buttons
+      const ua = navigator.userAgent || '';
+      const isIOS = /iPhone|iPad|iPod/i.test(ua);
+      const isAndroid = /Android/i.test(ua);
+      const storeButtons = document.getElementById('storeButtons');
+
+      const appStoreHTML = `
+        <a class="store-btn" href="https://apps.apple.com/app/id6760598028" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          Download on the App Store
+        </a>`;
+
+      const playStoreHTML = `
+        <a class="store-btn" href="https://play.google.com/store/apps/details?id=com.carloscalderonsv.SplitSmart" target="_blank" rel="noopener">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.18 23.76c.3.17.65.19.97.07l11.46-6.62-2.5-2.5-9.93 9zm15.15-8.74L5.47 21.8l-1.25.72 9.29-9.29 4.82 1.79zM20.7 10.5l-2.85-1.65-3.27 3.27 3.27 3.27 2.87-1.66c.82-.47.82-1.76-.02-2.23zM4.22.17C3.9.05 3.55.07 3.25.24L13.23 10.2l2.5-2.5L4.22.17z"/>
+          </svg>
+          Get it on Google Play
+        </a>`;
+
+      if (isIOS) {
+        storeButtons.innerHTML = appStoreHTML;
+      } else if (isAndroid) {
+        storeButtons.innerHTML = playStoreHTML;
+      } else {
+        storeButtons.innerHTML = appStoreHTML + playStoreHTML;
+      }
+
+      // Show fallback page after 2 seconds
+      setTimeout(function () {
+        document.getElementById('landing').classList.add('visible');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
